@@ -13001,6 +13001,43 @@ strings."
 	  ;; Return value.
 	  props)))))
 
+(defun org-entry-headline-text ()
+  "This is only used for logging"
+  (nth 4 (org-heading-components)))
+
+(defun org-entry-properties-inherit-scheduled-deadline (orig-fun &optional pom which)
+  "Call ORIG-FUN with POM, but if WHICH is `SCHEDULED' or `DEADLINE' do it recursively."
+  (message
+   "CALLED org-entry-properties-inherit-scheduled-deadline for property %s at headline %S..."
+   which (org-entry-headline-text))
+  (cond
+   ((member which '("DEADLINE" "SCHEDULED"))
+    (let (props (count 0))
+      (org-with-point-at pom
+        (while (not (or (setq props (funcall orig-fun (point) which))
+                        (not (setq count (+ count 1)))
+                        (not (org-up-heading-safe)))))
+        (if props
+          (message
+           "Found property %S at headline %S after %s jumps!"
+           props (org-entry-headline-text) count)
+          (message
+           "Have NOT found property %s at headline %S after %s jumps!"
+           which (org-entry-headline-text) (- count 1)))
+        props)))
+   (t
+    (let (props (funcall orig-fun pom which))
+      (if props
+          (message
+           "Found value %s for property %s at headline %S using original function!"
+           props which (org-entry-headline-text))
+        (message
+         "Have NOT found property %s at headline %S using original function!"
+         which (org-entry-headline-text)))
+      props))))
+
+(advice-add 'org-entry-properties :around #'org-entry-properties-inherit-scheduled-deadline)
+
 (defun org--property-local-values (property literal-nil)
   "Return value for PROPERTY in current entry.
 Value is a list whose car is the base value for PROPERTY and cdr
