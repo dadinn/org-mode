@@ -5495,6 +5495,7 @@ the documentation of `org-diary'."
 Given a point or marker POM, returns a cons cell of the timestamp
 and the timestamp type relevant for the sorting strategy in
 `org-agenda-sorting-strategy-selected'."
+  (message "CALLED org-agenda-entry-get-agenda-timestamp at headline %S" (org-entry-headline-text))
   (let (ts ts-date-type)
     (save-match-data
       (cond ((org-em 'scheduled-up 'scheduled-down
@@ -6173,6 +6174,7 @@ See also the user option `org-agenda-clock-consistency-checks'."
   "Return the deadline information for agenda display.
 When WITH-HOUR is non-nil, only return deadlines with an hour
 specification like [h]h:mm."
+  (message "CALLED org-agenda-get-deadlines")
   (with-no-warnings (defvar date))
   (let* ((props (list 'mouse-face 'highlight
 		      'org-not-done-regexp org-not-done-regexp
@@ -6332,6 +6334,7 @@ FRACTION is what fraction of the head-warning time has passed."
 Optional argument DEADLINES is a list of deadline items to be
 displayed in agenda view.  When WITH-HOUR is non-nil, only return
 scheduled items with an hour specification like [h]h:mm."
+  (message "CALLED org-agenda-get-scheduled")
   (with-no-warnings (defvar date))
   (let* ((props (list 'org-not-done-regexp org-not-done-regexp
 		      'org-todo-regexp org-todo-regexp

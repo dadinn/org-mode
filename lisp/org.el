@@ -10726,6 +10726,9 @@ returns nil."
   "Get the deadline as a time tuple, of a format suitable for
 calling org-deadline with, or if there is no scheduling, returns
 nil."
+  (message
+   "CALLED org-get-deadline-time at headline %S"
+   (org-entry-headline-text))
   (let ((time (org-entry-get pom "DEADLINE" inherit)))
     (when time
       (org-time-string-to-time time))))
@@ -12810,6 +12813,8 @@ a string, only get that property.
 
 Return value is an alist.  Keys are properties, as upcased
 strings."
+  (message "CALLED org-entry-properties for property %s at headline %S"
+           which (org-entry-headline-text))
   (org-with-point-at pom
     (when (and (derived-mode-p 'org-mode)
 	       (org-back-to-heading-or-point-min t))
@@ -13049,6 +13054,8 @@ If LITERAL-NIL is set, return the string value \"nil\" as
 a string, do not interpret it as the list atom nil.  This is used
 for inheritance when a \"nil\" value can supersede a non-nil
 value higher up the hierarchy."
+  (message "CALLED org-entry-get for property %s at headline %S"
+           property (org-entry-headline-text))
   (org-with-point-at pom
     (cond
      ((member-ignore-case property (cons "CATEGORY" org-special-properties))
